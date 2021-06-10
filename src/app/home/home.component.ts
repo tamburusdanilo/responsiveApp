@@ -20,7 +20,10 @@ export class HomeComponent implements OnInit {
   public getUserData(): any {
     this.homeService.getHomeData().toPromise()
       .then((data: any) => {
-         this.test = data;
+        this.test = data;
+      })
+      .catch((error: any) => {
+        console.log(error);
       });
 
   }
