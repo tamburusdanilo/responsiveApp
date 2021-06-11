@@ -3,20 +3,28 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
-import { of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let service: HomeService;
 
-  // stubs
-  const registryStub: HomeComponent = jasmine.createSpyObj('HomeComponent', ['getUserData']);
-  const fakeNames = {x: 1};
+
+  /* nao esta utilizando
+   // stubs 
+   const registryStub: HomeComponent = jasmine.createSpyObj('HomeComponent', ['getUserData']);
+   const fakeNames = {x: 1};
+ 
+ */
+
+  const homeResponse = { teste: 'teste' };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [HomeComponent]
+      declarations: [HomeComponent],
+      providers: [HomeService]
     })
       .compileComponents();
   });
@@ -25,6 +33,7 @@ describe('HomeComponent', () => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    service = TestBed.inject(HomeService);
   });
 
   it('should create', () => {
@@ -32,27 +41,26 @@ describe('HomeComponent', () => {
   });
 
 
-  it('should navigate on promise - success', fakeAsync(() => {
+  it('should navigate on promise - success', async () => {
 
-    spyOn(component, 'getUserData').and.returnValue(of(fakeNames));
-    (registryStub.getUserData as jasmine.Spy).and.returnValue(Promise.resolve(['test']));
-    component.getUserData();
+    spyOn(component, 'getUserData').and.callThrough();
+    spyOn(service, 'getHomeData').and.returnValue(of(homeResponse));
+    await component.getUserData();
+    expect(component.test).toEqual(homeResponse);
 
-    tick();
-    expect(component.getUserData).toHaveBeenCalled();
-
-
-
-    // spyOn(component, 'getUserData').and.returnValue(of(fakeNames));
-    // component.getUserData().toPromise()
-    // .then((data: any) => {
-    //   expect(data).toEqual(fakeNames);
-    // });
+  });
 
 
+  it('should navigate on promise - error', async () => {
+
+    spyOn(component, 'getUserData').and.callThrough();
+    spyOn(service, 'getHomeData').and.returnValue(throwError({ status: 404 }));
+    await component.getUserData();
+    expect(component.test).toEqual(undefined);
+
+  });
 
 
-  }));
 
 
 });

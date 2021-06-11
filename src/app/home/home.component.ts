@@ -17,6 +17,16 @@ export class HomeComponent implements OnInit {
     this.getUserData();
   }
 
+  // public getUserData(): any {
+  //   this.homeService.getHomeData().subscribe((data: any) => {
+  //     this.test = data;
+
+  //   });
+
+  // }
+
+
+
   public getUserData(): any {
     this.homeService.getHomeData().toPromise()
       .then((data: any) => {
