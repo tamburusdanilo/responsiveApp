@@ -12,11 +12,10 @@ describe('HomeComponent', () => {
 
 
   /* nao esta utilizando
-   // stubs 
+   // stubs
    const registryStub: HomeComponent = jasmine.createSpyObj('HomeComponent', ['getUserData']);
    const fakeNames = {x: 1};
- 
- */
+  */
 
   const homeResponse = { teste: 'teste' };
 
